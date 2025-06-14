@@ -1,88 +1,139 @@
 // src/styles/App.styles.ts
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
+
+const colors = {
+  primary: '#4A90E2',
+  accent: '#50E3C2',
+  background: '#F2F5F9',
+  surface: '#FFFFFF',
+  textPrimary: '#1C1C1C',
+  textSecondary: '#666666',
+  border: '#E0E0E0',
+  cardShadow: '#00000022',
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 16,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: colors.background,
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: '700',
-    marginVertical: 16,
-    color: '#222',
+    marginVertical: 24,
+    color: colors.textPrimary,
     textAlign: 'center',
   },
+
   userItem: {
-    backgroundColor: '#fff',
-    padding: 16,
-    marginVertical: 8,
-    borderRadius: 12,
-    // elevation: 3,
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 2 },
-    // shadowOpacity: 0.1,
-    // shadowRadius: 4,
+    backgroundColor: colors.surface,
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: colors.border,
+    ...Platform.select({
+      ios: {
+        shadowColor: colors.cardShadow,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   userName: {
-    fontSize: 18,
-    color: '#333',
+    fontSize: 20,
+    color: colors.textPrimary,
     fontWeight: '600',
   },
+
   sheetContent: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#fff',
+    padding: 24,
+    backgroundColor: colors.surface,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
   },
+
   tabContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
     marginBottom: 20,
     borderBottomWidth: 1,
-    borderColor: '#ddd',
+    borderColor: colors.border,
   },
   tab: {
     marginHorizontal: 12,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
     borderBottomWidth: 3,
     borderColor: 'transparent',
   },
   activeTab: {
-    borderColor: '#007aff',
+    borderColor: colors.primary,
   },
   tabContent: {
-    paddingVertical: 10,
-  },
-  editButton: {
-    marginTop: 16,
-    backgroundColor: '#007aff',
     paddingVertical: 12,
+    paddingHorizontal: 4,
+  },
+
+  editButton: {
+    marginTop: 20,
+    backgroundColor: colors.primary,
+    paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: colors.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
   editButtonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontWeight: '600',
+    fontSize: 16,
   },
+
   actionsContainer: {
-    marginTop: 24,
+    marginTop: 32,
   },
   actionsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 12,
+    marginTop: 16,
   },
   actionButton: {
-    backgroundColor: '#e0e0e0',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
+    backgroundColor: '#EDF2F7',
+    paddingVertical: 12,
+    paddingHorizontal: 28,
+    borderRadius: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   actionButtonText: {
     fontWeight: '500',
-    color: '#333',
+    color: colors.textSecondary,
+    fontSize: 15,
   },
 });
 

@@ -38,15 +38,24 @@ const App = () => {
       setLoading(false);
     });
 }, []);
+useEffect(() => {
+  if (selectedUser) {
+    console.log(selectedUser.name);
+    // Defer the expand until after render
+    const timeout = setTimeout(() => {
+      bottomSheetRef.current?.expand();
+    }, 0);
+    return () => clearTimeout(timeout);
+  }
+}, [selectedUser]);
 
 
   const openBottomSheet = (user: User) => {
-    setSelectedUser(user);
-    setActiveTab('profile');
-    setTimeout(() => {
-      bottomSheetRef.current?.expand();
-    }, 100);
-  };
+  setSelectedUser(user);
+  setActiveTab('profile');
+};
+
+
 
   const handleSheetChange = useCallback((index: number) => {
     if (index === -1) setSelectedUser(null);
@@ -56,7 +65,7 @@ const App = () => {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
         <Text style={styles.title}>User List</Text>
-        <UserList users={users} loading={loading} error={error} onUserSelect={openBottomSheet} />
+        <UserList users={users} loading={loading} error={error} onUserSelect={(user)=>{openBottomSheet(user)}} />
         <UserBottomSheet
           user={selectedUser}
           sheetRef={bottomSheetRef}
