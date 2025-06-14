@@ -1,28 +1,72 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Text, StyleSheet } from 'react-native';
+import axios from 'axios';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { User } from './src/types/user';
+import UserList from './src/components/UserList';
+import UserBottomSheet from './src/components/UserBottomSheet';
+import { BottomSheetMethods } from '@gorhom/bottom-sheet/lib/typescript/types';
+import styles from './src/styles/App.styles';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
+  const [users, setUsers] = useState<User[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [activeTab, setActiveTab] = useState<'profile' | 'contact'>('profile');
+  const [error, setError] = useState<string | null>(null);
+
+
+  const bottomSheetRef = useRef<BottomSheetMethods>(null);
+
+  useEffect(() => {
+  axios.get<User[]>('https://jsonplaceholder.typicode.com/users')
+    .then(response => {
+      if (response.data.length > 0) {
+        setUsers(response.data);
+        setError(null);
+      } else {
+        setError('No data found.');
+      }
+    })
+    .catch(err => {
+      console.error(err);
+      setError('Unable to fetch data. Please check your internet connection.');
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, []);
+
+
+  const openBottomSheet = (user: User) => {
+    setSelectedUser(user);
+    setActiveTab('profile');
+    setTimeout(() => {
+      bottomSheetRef.current?.expand();
+    }, 100);
+  };
+
+  const handleSheetChange = useCallback((index: number) => {
+    if (index === -1) setSelectedUser(null);
+  }, []);
 
   return (
-    <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <NewAppScreen templateFileName="App.tsx" />
-    </View>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}>User List</Text>
+        <UserList users={users} loading={loading} error={error} onUserSelect={openBottomSheet} />
+        <UserBottomSheet
+          user={selectedUser}
+          sheetRef={bottomSheetRef}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          onChange={handleSheetChange}
+        />
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+};
 
 export default App;
